@@ -73,8 +73,8 @@ export default function App() {
         
         <div className="relative z-10 flex justify-between items-start mb-8">
           <div>
-            <p className="text-blue-200 text-sm font-medium mb-1">Selamat datang kembali</p>
-            <h1 className="text-2xl font-bold">Tegar Firmansyah</h1>
+            <p className="text-blue-200 text-sm pt-12 font-medium mb-1">Selamat datang kembali</p>
+            <p className="text-2xl pt-2 pb-10 font-bold text-left">Sayang 🥰</p>
           </div>
           <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
