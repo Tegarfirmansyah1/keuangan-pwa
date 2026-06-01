@@ -13,8 +13,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'] // Meng-*cache* semua aset agar bisa offline
       },
       manifest: {
-        name: 'Pencatatan Keuangan',
-        short_name: 'Keuangan',
+        name: 'KAS',
+        short_name: 'KAS',
         description: 'Aplikasi pencatatan keuangan offline',
         theme_color: '#ffffff',
         display: 'standalone',
