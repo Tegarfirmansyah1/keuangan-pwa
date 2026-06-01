@@ -5,9 +5,13 @@ import { db } from '../db.js';
 export default function TransferBalance({ onBack }) {
   const [amountInput, setAmountInput] = useState('');
   const [rawAmount, setRawAmount] = useState(0);
+  const [note, setNote] = useState('');
   const [fromWallet, setFromWallet] = useState('');
   const [toWallet, setToWallet] = useState('');
-  const [note, setNote] = useState('');
+
+  // State untuk mengontrol buka-tutup dropdown (HARUS BEDA)
+  const [isFromWalletOpen, setIsFromWalletOpen] = useState(false);
+  const [isToWalletOpen, setIsToWalletOpen] = useState(false);
   
   const getLocalDatetime = () => {
     const now = new Date();
@@ -114,31 +118,146 @@ export default function TransferBalance({ onBack }) {
               <input type="text" inputMode="numeric" value={amountInput} onChange={handleAmountChange} placeholder="0" className="w-full bg-slate-50 border border-slate-200 text-2xl font-black rounded-xl py-3 pl-12 pr-4 outline-none focus:border-violet-500 text-violet-600 transition-colors" />
             </div>
           </div>
-
+ 
           <div className="flex items-start gap-2">
-            <div className="flex-1">
-              <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Dari Dompet</label>
-              <select value={fromWallet} onChange={(e) => setFromWallet(e.target.value)} className="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 outline-none focus:border-violet-500">
-                {!wallets || wallets.length === 0 ? <option value="">Memuat...</option> : wallets.map(w => <option key={w.id} value={w.name}>{w.icon} {w.name}</option>)}
-              </select>
-              
+            <div className="flex flex-col gap-4 w-full">
+              {/* ========================================= */}
+              {/* DROPDOWN 1: DOMPET SUMBER (FROM WALLET) */}
+              {/* ========================================= */}
+              <div className="relative w-full">
+                <label className="text-sm font-semibold text-slate-700 mb-1 block">Dari Dompet</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsFromWalletOpen(!isFromWalletOpen);
+                    setIsToWalletOpen(false); // Otomatis tutup dropdown sebelah jika sedang terbuka
+                  }}
+                  className="w-full -mb-2 bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 flex justify-between items-center outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                >
+                  <div className="flex items-center gap-2">
+                    {fromWallet ? (
+                      <>
+                        {(() => {
+                          const selectedW = wallets.find((w) => w.name === fromWallet);
+                          if (!selectedW) return fromWallet;
+                          return (
+                            <>
+                              {selectedW.icon.includes('/') || selectedW.icon.startsWith('data:') ? (
+                                <img src={selectedW.icon} alt={selectedW.name} className="w-5 h-5 object-contain" />
+                              ) : (
+                                <span className="text-lg">{selectedW.icon}</span>
+                              )}
+                              <span>{selectedW.name}</span>
+                            </>
+                          );
+                        })()}
+                      </>
+                    ) : (
+                      <span className="text-slate-400">Pilih Dompet Sumber...</span>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-400">▼</span>
+                </button>
+
+                {isFromWalletOpen && (
+                  <ul className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                    {!wallets || wallets.length === 0 ? (
+                      <li className="p-3 text-sm text-slate-500 text-center">Memuat...</li>
+                    ) : (
+                      wallets.map((w) => (
+                        <li
+                          key={w.id}
+                          onClick={() => {
+                            setFromWallet(w.name);
+                            setIsFromWalletOpen(false);
+                          }}
+                          className="flex items-center gap-2 p-3 text-sm font-semibold cursor-pointer hover:bg-slate-50 border-b border-slate-50 last:border-0"
+                        >
+                          {w.icon.includes('/') || w.icon.startsWith('data:') ? (
+                            <img src={w.icon} alt={w.name} className="w-5 h-5 object-contain" />
+                          ) : (
+                            <span className="text-lg">{w.icon}</span>
+                          )}
+                          {w.name}
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
+
               {/* 4. TAMBAHAN: Indikator UI Sisa Saldo Dompet Asal */}
-              <p className={`text-[9px] mt-1.5 ml-1 font-bold tracking-wide ${rawAmount > sourceBalance ? 'text-rose-500' : 'text-slate-400'}`}>
+              <p className={`text-[9px] pl-1 text-left font-bold tracking-wide ${rawAmount > sourceBalance ? 'text-rose-500' : 'text-slate-400'}`}>
                 SISA: Rp {new Intl.NumberFormat('id-ID').format(sourceBalance)}
               </p>
             </div>
-            
-            <div className="mt-4 text-violet-500">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-            </div>
 
-            <div className="flex-1">
-              <label className="block text-[10px] font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Ke Dompet</label>
-              <select value={toWallet} onChange={(e) => setToWallet(e.target.value)} className="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 outline-none focus:border-violet-500">
-                {!wallets || wallets.length === 0 ? <option value="">Memuat...</option> : wallets.map(w => <option key={w.id} value={w.name}>{w.icon} {w.name}</option>)}
-              </select>
+              {/* ========================================= */}
+              {/* DROPDOWN 2: DOMPET TUJUAN (TO WALLET) */}
+              {/* ========================================= */}
+              <div className="relative w-full">
+                <label className="text-sm font-semibold text-slate-700 mb-1 block">Ke Dompet</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsToWalletOpen(!isToWalletOpen);
+                    setIsFromWalletOpen(false); // Otomatis tutup dropdown sebelah jika sedang terbuka
+                  }}
+                  className="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 flex justify-between items-center outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                >
+                  <div className="flex items-center gap-2">
+                    {toWallet ? (
+                      <>
+                        {(() => {
+                          const selectedW = wallets.find((w) => w.name === toWallet);
+                          if (!selectedW) return toWallet;
+                          return (
+                            <>
+                              {selectedW.icon.includes('/') || selectedW.icon.startsWith('data:') ? (
+                                <img src={selectedW.icon} alt={selectedW.name} className="w-5 h-5 object-contain" />
+                              ) : (
+                                <span className="text-lg">{selectedW.icon}</span>
+                              )}
+                              <span>{selectedW.name}</span>
+                            </>
+                          );
+                        })()}
+                      </>
+                    ) : (
+                      <span className="text-slate-400">Pilih Dompet Tujuan...</span>
+                    )}
+                  </div>
+                  <span className="text-xs text-slate-400">▼</span>
+                </button>
+
+                {isToWalletOpen && (
+                  <ul className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                    {!wallets || wallets.length === 0 ? (
+                      <li className="p-3 text-sm text-slate-500 text-center">Memuat...</li>
+                    ) : (
+                      wallets.map((w) => (
+                        <li
+                          key={`to-${w.id}`}
+                          onClick={() => {
+                            setToWallet(w.name);
+                            setIsToWalletOpen(false);
+                          }}
+                          className="flex items-center gap-2 p-3 text-sm font-semibold cursor-pointer hover:bg-slate-50 border-b border-slate-50 last:border-0"
+                        >
+                          {w.icon.includes('/') || w.icon.startsWith('data:') ? (
+                            <img src={w.icon} alt={w.name} className="w-5 h-5 object-contain" />
+                          ) : (
+                            <span className="text-lg">{w.icon}</span>
+                          )}
+                          {w.name}
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
+
             </div>
-          </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Tanggal & Waktu</label>
