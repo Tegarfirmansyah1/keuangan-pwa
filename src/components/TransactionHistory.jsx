@@ -150,14 +150,14 @@ export default function TransactionHistory({ onBack, onEdit }) {
   };
 
   return (
-    <div className="bg-gradient-to-b from-slate-50 to-slate-100 min-h-screen text-slate-900 pb-8 flex flex-col max-w-md mx-auto shadow-xl">
+    <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
       
       {/* HEADER */}
       <header className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white pt-1 pb-8 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 rounded-full -mr-20 -mt-20 opacity-30"></div>
         
         <div className="relative z-10 flex items-center justify-between mb-6">
-          <button onClick={onBack} className="w-6 h-6 mt-0.5 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30">
+          <button onClick={onBack} className="w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
           <h1 className="flex-1 text-center text-xl font-bold">Riwayat Transaksi</h1>

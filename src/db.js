@@ -19,6 +19,14 @@ db.version(2).stores({
   budgets: '++id, category, amount'
 });
 
+db.version(3).stores({
+  transactions: '++id, type, amount, category, wallet, date, loanId', 
+  categories: '++id, name, type, icon',
+  wallets: '++id, name, icon',
+  budgets: '++id, category, amount',
+  loans: '++id, name, totalAmount, paidAmount, status, date'
+});
+
 db.on('populate', async () => {
   await db.wallets.bulkAdd([
     { name: 'Tunai', icon: tunaiIcon },

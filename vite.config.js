@@ -10,7 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'] // Meng-*cache* semua aset agar bisa offline
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'] 
       },
       manifest: {
         name: 'KAS',

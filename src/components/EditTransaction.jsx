@@ -9,6 +9,7 @@ export default function EditTransaction({ transaction, onBack }) {
   const [category, setCategory] = useState(transaction.category);
   const [wallet, setWallet] = useState(transaction.wallet);
   const [note, setNote] = useState(transaction.note || '');
+  const [isWalletOpen, setIsWalletOpen] = useState(false);
   
   const formatEditDate = (isoString) => {
     const d = new Date(isoString);
@@ -69,12 +70,12 @@ export default function EditTransaction({ transaction, onBack }) {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen text-slate-900 pb-8 flex flex-col max-w-md mx-auto shadow-xl font-sans relative">
+    <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
       <header className="bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-900 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20 opacity-10"></div>
         <div className="relative z-10 flex items-center justify-between">
-          <button type="button" onClick={onBack} className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30 cursor-pointer">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+          <button type="button" onClick={onBack} className="w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30 cursor-pointer">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
           </button>
           <h1 className="flex-1 text-center text-xl font-bold">Detail Transaksi</h1>
           <div className="w-10"></div>
@@ -104,10 +105,67 @@ export default function EditTransaction({ transaction, onBack }) {
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Dompet</label>
-              <select value={wallet} onChange={(e) => setWallet(e.target.value)} className="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 outline-none focus:border-blue-500">
-                {/* PERBAIKAN DI SINI */}
-                {!wallets || wallets.length === 0 ? <option value="">Memuat...</option> : wallets.map(w => <option key={w.id} value={w.name}>{w.icon} {w.name}</option>)}
-              </select>
+              <div className="relative w-full">
+                  {/* Tombol yang terlihat (Trigger) */}
+                  <button
+                    type="button"
+                    onClick={() => setIsWalletOpen(!isWalletOpen)}
+                    className="w-full bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl p-3 flex justify-between items-center outline-none focus:border-blue-500"
+                  >
+                    <div className="flex items-center gap-2">
+                      {wallet ? (
+                        <>
+                          {/* Mencari data dompet yang sedang dipilih untuk menampilkan ikonnya di tombol */}
+                          {(() => {
+                            const selectedW = wallets.find((w) => w.name === wallet);
+                            if (!selectedW) return wallet;
+                            return (
+                              <>
+                                {selectedW.icon.includes('/') || selectedW.icon.startsWith('data:') ? (
+                                  <img src={selectedW.icon} alt={selectedW.name} className="w-4 h-4 object-contain" />
+                                ) : (
+                                  <span className="text-lg">{selectedW.icon}</span>
+                                )}
+                                <span>{selectedW.name}</span>
+                              </>
+                            );
+                          })()}
+                        </>
+                      ) : (
+                        <span className="text-slate-400">Pilih Dompet...</span>
+                      )}
+                    </div>
+                    {/* Ikon panah bawah kecil */}
+                    <span className="text-xs text-slate-400">▼</span>
+                  </button>
+
+                  {/* Daftar Pilihan yang Muncul Saat Diklik (Menu) */}
+                  {isWalletOpen && (
+                    <ul className="absolute z-10 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">
+                      {!wallets || wallets.length === 0 ? (
+                        <li className="p-3 text-sm text-slate-500 text-center">Memuat...</li>
+                      ) : (
+                        wallets.map((w) => (
+                          <li
+                            key={w.id}
+                            onClick={() => {
+                              setWallet(w.name);       // Simpan pilihan
+                              setIsWalletOpen(false);  // Tutup dropdown
+                            }}
+                            className="flex items-center gap-2 p-3 text-sm font-semibold cursor-pointer hover:bg-slate-50 border-b border-slate-50 last:border-0"
+                          >
+                            {w.icon.includes('/') || w.icon.startsWith('data:') ? (
+                              <img src={w.icon} alt={w.name} className="w-4 h-4 object-contain" />
+                            ) : (
+                              <span className="text-lg">{w.icon}</span>
+                            )}
+                            {w.name}
+                          </li>
+                        ))
+                      )}
+                    </ul>
+                  )}
+                </div>
             </div>
           </div>
           <div>
