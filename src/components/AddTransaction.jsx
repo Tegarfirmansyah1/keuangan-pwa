@@ -6,7 +6,7 @@ import { formatIDR } from '../utils/formatter.js';
 const VALIDATION_RULES = {
   amount: {
     min: 1,
-    max: 999999999,
+    max: 9999999999,
     required: true
   },
   category: {
@@ -130,9 +130,54 @@ export default function AddTransaction({ onBack }) {
     }
   };
 
+  // --- KODE BARU: Ambil Budget untuk kategori yang dipilih ---
+  const currentBudget = useLiveQuery(
+    () => db.budgets.where('category').equals(category).first(),
+    [category]
+  );
+
+  // --- KODE BARU: Hitung total pengeluaran bulan ini untuk kategori tersebut ---
+  const spentThisMonth = useLiveQuery(async () => {
+    if (type !== 'expense' || !category) return 0;
+    
+    // Ambil bulan dari tanggal yang diinput user
+    const inputDate = new Date(date || Date.now());
+    const startOfMonth = new Date(inputDate.getFullYear(), inputDate.getMonth(), 1).toISOString();
+    const endOfMonth = new Date(inputDate.getFullYear(), inputDate.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+    const txs = await db.transactions
+      .where('category').equals(category)
+      .toArray();
+      
+    return txs
+      .filter(t => t.type === 'expense' && t.date >= startOfMonth && t.date <= endOfMonth)
+      .reduce((sum, t) => sum + t.amount, 0);
+  }, [category, type, date]) || 0;
+
+  // --- KODE BARU: State untuk menampung pesan peringatan ---
+  const [budgetWarning, setBudgetWarning] = useState('');
+
+  // --- KODE BARU: Logika pengecekan peringatan ---
+  useEffect(() => {
+    if (type === 'expense' && currentBudget && rawAmount > 0) {
+      const projected = spentThisMonth + rawAmount;
+      const sisaBudget = currentBudget.amount - spentThisMonth;
+      
+      if (projected > currentBudget.amount) {
+         setBudgetWarning(`Transaksi ini melebihi budget! Sisa budget ${category} bulan ini: ${formatIDR(sisaBudget)}.`);
+      } else if (projected === currentBudget.amount) {
+         setBudgetWarning(`Perhatian: Transaksi ini akan menghabiskan seluruh sisa budget ${category} bulan ini.`);
+      } else {
+         setBudgetWarning('');
+      }
+    } else {
+      setBudgetWarning('');
+    }
+  }, [type, currentBudget, spentThisMonth, rawAmount, category]);
+
   return (
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
-      <header className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 rounded-full -mr-20 -mt-20 opacity-30"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400 rounded-full -ml-16 -mb-16 opacity-20"></div>
         <div className="relative z-10 flex items-center justify-between">
@@ -194,7 +239,7 @@ export default function AddTransaction({ onBack }) {
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">Rp</span>
-              <input 
+               <input 
                 type="text" 
                 inputMode="numeric" 
                 value={amountInput} 
@@ -351,6 +396,16 @@ export default function AddTransaction({ onBack }) {
             />
             <p className="text-xs text-slate-400 mt-1">{note.length}/150 karakter</p>
           </div>
+
+          {/* --- KODE BARU: Tampilkan peringatan budget di sini --- */}
+          {budgetWarning && (
+            <div className="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-start gap-3 shadow-sm animate-fade-in">
+              <span className="text-xl leading-none mt-0.5">⚠️</span>
+              <p className="text-xs font-semibold text-amber-800 leading-relaxed">
+                {budgetWarning}
+              </p>
+            </div>
+          )}
 
           {/* Submit button */}
           <button 

@@ -1,5 +1,91 @@
 @import "tailwindcss";
 
+/* src/index.css */
+
+/* ==========================================
+   1. DEFINISI VARIABEL WARNA TIAP TEMA
+   ========================================== */
+
+/* --- TEMA LIGHT (TERANG) --- */
+:root, html.light {
+  --bg-app: #c9e4ff;       /* Abu-abu sangat terang untuk latar aplikasi */
+  --bg-card: #ffffff;      /* Putih bersih untuk komponen/card */
+  --bg-header: #2563eb;    /* Biru (Blue 600) murni untuk Header */
+  --text-header: #ffffff;  /* Teks putih di dalam header */
+  --text-main: #0f172a;    /* Slate 900 untuk teks utama */
+  --text-muted: #64748b;   /* Slate 500 untuk teks deskripsi/pembantu */
+  --border-color: #e2e8f0; /* Garis pembatas terang */
+  --primary: #2563eb;      /* Warna tombol utama */
+}
+
+/* --- TEMA DARK (GELAP) --- */
+html.dark {
+  --bg-app: #0f172a;       /* Slate 900 untuk latar aplikasi */
+  --bg-card: #1e293b;      /* Slate 800 untuk komponen/card */
+  --bg-header: #1e293b;    /* Header menyatu elegan dengan warna card */
+  --text-header: #f8fafc;  /* Teks terang di header */
+  --text-main: #f8fafc;    /* Teks utama putih */
+  --text-muted: #94a3b8;   /* Teks pembantu abu-abu terang */
+  --border-color: #334155; /* Garis pembatas gelap */
+  --primary: #013890;      /* Tombol utama biru cerah */
+}
+
+/* --- TEMA PINK (SAKURA) --- */
+html.pink {
+  --bg-app: #fbf0f8;       /* Rose 50 (Latar belakang pink sangat lembut) */
+  --bg-card: #ffffff;      /* Card kontainer tetap putih agar data nyaman dibaca */
+  --bg-header: #F875AA;    /* Pink fuchsia cerah (Pink 600) untuk elemen Header */
+  --text-header: #ffffff;  /* Teks putih di dalam header pink */
+  --text-main: #2d010e;    /* Rose 950 (Maroon gelap untuk teks utama agar kontras tinggi) */
+  --text-muted: #9f1239;   /* Rose 800 untuk teks pembantu */
+  --border-color: #fecdd3; /* Garis pembatas pink pastel (Rose 200) */
+  --primary: #F891BB;      /* Tombol utama warna pink */    
+}
+
+/* ==========================================
+   2. ATURAN GLOBAL DAN KELAS BANTUAN (UTILITY)
+   ========================================== */
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  margin: 0;
+}
+
+/* Semua form input di seluruh aplikasi otomatis menyesuaikan tema */
+input, select, textarea {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+
+/* Terapkan class bantu ini pada elemen-elemen JSX Anda */
+.app-bg { background-color: var(--bg-app); }
+.app-text { color: var(--text-main); }
+.app-text-muted { color: var(--text-muted); }
+.app-border { border-color: var(--border-color); }
+
+
+/* Otomatis merubah seluruh background, teks, dan border pembatas komponen */
+.app-card { 
+  background-color: var(--bg-card); 
+  color: var(--text-main); 
+  border: 1px solid var(--border-color); 
+}
+
+/* Otomatis mengubah warna background header sekaligus warna teks di dalamnya */
+.app-header { 
+  background-color: var(--bg-header); 
+  color: var(--text-header); 
+}
+
+/* Tombol utama dinamis */
+.app-btn { 
+  background-color: var(--primary); 
+  color: #ffffff; 
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;

@@ -97,7 +97,7 @@ export default function TransferBalance({ onBack }) {
 
   return (
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
-      <header className="bg-gradient-to-br from-blue-600 via-blue-600 to-blue-900 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20 opacity-10"></div>
         <div className="relative z-10 flex items-center justify-between">
           <button type="button" onClick={onBack} className="w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30 cursor-pointer">
@@ -267,7 +267,7 @@ export default function TransferBalance({ onBack }) {
             <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">Catatan</label>
             <input type="text" value={note} onChange={(e) => setNote(e.target.value)} placeholder="Opsional..." className="w-full bg-slate-50 border border-slate-200 text-sm rounded-xl p-3 outline-none focus:border-blue-500" />
           </div>
-          <button type="submit" className="w-full bg-blue-700 text-white font-bold text-sm py-4 rounded-xl shadow-md hover:bg-blue-800 active:bg-blue-900 transition-colors mt-2">
+          <button type="submit" className="w-full app-btn text-white font-bold text-sm py-4 rounded-xl shadow-md hover:bg-blue-800 active:bg-blue-900 transition-colors mt-2">
             Proses Transfer
           </button>
         </form>

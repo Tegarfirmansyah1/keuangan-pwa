@@ -142,7 +142,7 @@ const handleInputAngka = (e, setter) => {
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
 
       {/* HEADER */}
-<header className="bg-gradient-to-br -z-0 from-blue-600 via-blue-600 to-blue-900 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
+<header className="app-header text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
     <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20 opacity-10"></div>
      <div className="relative z-10 flex items-center justify-between">
         <button onClick={onBack} className="w-6 h-6 mr-4 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30 cursor-pointer">
@@ -161,7 +161,7 @@ const handleInputAngka = (e, setter) => {
           {!showForm && (
           <button 
             onClick={() => { resetForm(); setShowForm(true); }} 
-            className="flex mx-auto items-center gap-1 bg-violet-600 text-white px-4 py-2 mt-4 rounded-xl text-sm font-semibold hover:bg-violet-700 transition"
+            className="flex mx-auto items-center gap-1 app-btn text-white px-4 py-2 mt-4 rounded-xl text-sm font-semibold hover:bg-violet-700 transition"
           >
             {/* Ikon Plus */}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
@@ -213,7 +213,7 @@ const handleInputAngka = (e, setter) => {
           const progress = (loan.paidAmount / loan.totalAmount) * 100;
           
           return (
-            <div key={loan.id} className="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div key={loan.id} className="bg-white w-90 mx-auto p-5 rounded-2xl shadow-sm border border-slate-200">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="font-bold text-lg text-slate-800">{loan.name}</h3>
@@ -236,7 +236,7 @@ const handleInputAngka = (e, setter) => {
               
               {/* Progress Bar Minimalis */}
               <div className="w-full bg-slate-100 rounded-full h-2 mb-4 overflow-hidden">
-                <div className="bg-violet-500 h-full rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                <div className="app-btn h-full rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
               </div>
               
               {/* LAYOUT BARU: GRID 2x2 (Kiri 2, Kanan 2) */}
@@ -254,7 +254,7 @@ const handleInputAngka = (e, setter) => {
                 {/* Kiri Bawah */}
                 <div className="flex flex-col text-left border-t border-slate-100 pt-2">
                   <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Sudah Dibayar</span>
-                  <span className="text-xs font-bold text-violet-600">{formatIDR(loan.paidAmount)}</span>
+                  <span className="text-xs font-bold app-text">{formatIDR(loan.paidAmount)}</span>
                 </div>
                 {/* Kanan Bawah */}
                 <div className="flex flex-col text-right border-t border-slate-100 pt-2">
@@ -325,12 +325,12 @@ const handleInputAngka = (e, setter) => {
                         />
                       
                       <div className="flex gap-2 mt-1">
-                        <button type="submit" className="flex-1 bg-violet-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-violet-700 transition">Bayar</button>
+                        <button type="submit" className="flex-1 app-btn text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-slate-200 transition">Bayar</button>
                         <button type="button" onClick={() => setPayLoanId(null)} className="flex-1 bg-slate-100 text-slate-600 py-2.5 rounded-xl font-semibold text-sm hover:bg-slate-200 transition">Batal</button>
                       </div>
                     </form>
                   ) : (
-                    <button onClick={() => { setPayLoanId(loan.id); setShowForm(false); }} className="w-full flex justify-center items-center gap-2 border border-violet-200 text-violet-600 bg-violet-50 py-2.5 rounded-xl font-semibold text-sm hover:bg-violet-100 transition">
+                    <button onClick={() => { setPayLoanId(loan.id); setShowForm(false); }} className="w-full flex justify-center items-center gap-2 border border-violet-200 app-btn bg-violet-50 py-2.5 rounded-xl font-semibold text-sm hover:bg-violet-100 transition">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" /></svg>
                       Bayar / Cicil
                     </button>

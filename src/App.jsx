@@ -1,4 +1,4 @@
-// src/App.jsx
+import { useEffect } from 'react';
 import { useState, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from './db';
@@ -11,8 +11,37 @@ import TransferBalance from './components/TransferBalance';
 import { useRouter } from './hooks/useRouter';
 import Backup from './components/Backup';
 import Pinjaman from './components/Pinjaman';
+import NameModal from './components/NameModal';
+import SettingsModal from './components/SettingModal';
 
 export default function App() {
+
+  const [userName, setUserName] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFirstTime, setIsFirstTime] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  // Cek localStorage saat aplikasi pertama kali dimuat
+  useEffect(() => {
+      // Hanya fokus mengurus Nama User saja sekarang
+      const savedName = localStorage.getItem('userNickname');
+      if (savedName) {
+        setUserName(savedName);
+      } else {
+        setIsFirstTime(true);
+        setShowModal(true);
+      }
+    }, []);
+
+  const handleSaveName = (name) => {
+    localStorage.setItem('userNickname', name);
+    setUserName(name);
+    setIsFirstTime(false);
+    setShowModal(false);
+  };
+
+
   // Query database
   const transactions = useLiveQuery(() => 
     db.transactions.orderBy('date').reverse().toArray()
@@ -97,41 +126,50 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
   return (
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
       
+      <SettingsModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+        currentName={userName}
+        onSaveName={handleSaveName}
+        isFirstTime={isFirstTime}
+        
+      />
+
+      {showModal && <NameModal onSave={handleSaveName} />}
+
       {/* HEADER GRADIENT */}
-      <header className="bg-gradient-to-br from-blue-600 via-blue-600 to-blue-900 text-white pt-8 pb-12 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-8 pb-12 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 rounded-full -mr-20 -mt-20 opacity-30"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400 rounded-full -ml-16 -mb-16 opacity-20"></div>
         
         <div className="relative z-10 flex justify-between items-start mb-8">
           <div>
-            <p className="text-blue-200 text-sm pt-12 font-medium mb-1">Selamat datang kembali</p>
-            <p className="text-2xl pt-2 pb-10 font-bold text-left">Sayang 🥰</p>
+            <p className="text-main text-[18px] pt-12 font-medium mb-1">Selamat datang kembali</p>
+            <p className="text-[32px] pt-2 pb-10 font-bold text-left">{userName || 'User'}</p>
           </div>
-          <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-            </svg>
-          </button>
+          <button onClick={() => setIsModalOpen(true)} className="text-lg">
+          ⚙️
+        </button>
         </div>
 
         {/* BALANCE CARD */}
-        <div className="relative z-10 bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-2xl">
-          <p className="text-blue-100 text-sm font-medium mb-5">Total Saldo Anda</p>
+        <div className="relative z-10 app-card backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-2xl">
+          <p className="text-main text-sm font-medium mb-5">Total Saldo Anda</p>
           <p className="text-2xl font-bold tracking-tight mb-5 break-words overflow-hidden">
             {formatIDR(currentBalance)}
           </p>
           
           <div className="flex flex-col gap-2 mt-8">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2.5 border border-white/20 flex justify-between items-center">
-              <p className="text-blue-200 text-xs font-medium">Pemasukan</p>
-              <p className="text-sm font-bold text-emerald-300 truncate pl-4">
+            <div className="app-bg backdrop-blur-sm rounded-lg px-4 py-2.5 border border-white/20 flex justify-between items-center">
+              <p className="text-main text-xs font-medium">Pemasukan</p>
+              <p className="text-sm font-bold text-emerald-500 truncate pl-4">
                 {formatIDR(totalIncome)}
               </p>
             </div>
             
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2.5 border border-white/20 flex justify-between items-center">
-              <p className="text-blue-200 text-xs font-medium">Pengeluaran</p>
-              <p className="text-sm font-bold text-rose-300 truncate pl-4">
+            <div className="app-bg backdrop-blur-sm rounded-lg px-4 py-2.5 border border-white/20 flex justify-between items-center">
+              <p className="text-main text-xs font-medium">Pengeluaran</p>
+              <p className="text-sm font-bold text-red-400 truncate pl-4">
                 {formatIDR(totalExpense)}
               </p>
             </div>
@@ -139,7 +177,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
             {/* Wallet Details */}
             {walletBalances.length > 0 && (
               <div className="mt-5 pt-4 border-t border-white/15">
-                <p className="text-[10px] text-blue-200 font-bold mb-3 uppercase tracking-wider">Rincian Dompet</p>
+                <p className="text-[10px] text-main font-bold mb-3 uppercase tracking-wider">Rincian Dompet</p>
                 <div className="flex flex-col gap-2.5">
                   {walletBalances.map(wb => (
                     <div key={wb.id} className="flex justify-between items-center px-1">
@@ -151,9 +189,9 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
                             style={{ width: '24px', height: '24px', objectFit: 'contain' }} 
                           />
                         </span>
-                        <span className="text-xs font-medium text-blue-50">{wb.name}</span>
+                        <span className="text-xs font-medium text-main">{wb.name}</span>
                       </div>
-                      <p className={`text-xs font-bold tracking-wide ${wb.balance < 0 ? 'text-rose-400' : 'text-white'}`}>
+                      <p className={`text-xs font-bold tracking-wide ${wb.balance < 0 ? 'text-rose-400' : 'app-text'}`}>
                         {formatIDR(wb.balance)}
                       </p>
                     </div>
@@ -228,10 +266,10 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
           <h3 className="text-lg font-bold text-slate-900">Riwayat Transaksi Terbaru</h3>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           {transactions.length === 0 ? (
-            <div className="p-12 text-center">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="p-12 text-center ">
+              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 ">
                 <svg className="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
@@ -242,7 +280,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
           ) : (
             <div className="divide-y divide-slate-100">
               {transactions.slice(0, 5).map((trx) => (
-                <div key={trx.id} className="p-4 transition-colors flex flex-col gap-1.5">
+                <div key={trx.id} className="p-4 transition-colors flex flex-col gap-1.5 border-b border-slate-300">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${trx.type === 'income' ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
@@ -253,7 +291,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
                   
                   <div className="flex justify-between items-end mt-0.5">
                     <div className="flex flex-col gap-0.5">
-                      <p className="text-xs text-slate-500 truncate max-w-[100px]">{trx.note || '-'}</p>
+                      <p className="text-xs text-slate-500 truncate max-w-[150px]">{trx.note || '-'}</p>
                       <p className="text-[10px] text-left text-slate-400">
                         {new Date(trx.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                       </p>

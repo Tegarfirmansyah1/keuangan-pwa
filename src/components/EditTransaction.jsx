@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db.js';
 
+
 export default function EditTransaction({ transaction, onBack }) {
   const [type, setType] = useState(transaction.type);
   const [amountInput, setAmountInput] = useState(new Intl.NumberFormat('id-ID').format(transaction.amount));
@@ -10,6 +11,7 @@ export default function EditTransaction({ transaction, onBack }) {
   const [wallet, setWallet] = useState(transaction.wallet);
   const [note, setNote] = useState(transaction.note || '');
   const [isWalletOpen, setIsWalletOpen] = useState(false);
+  
   
   const formatEditDate = (isoString) => {
     const d = new Date(isoString);
@@ -32,7 +34,7 @@ export default function EditTransaction({ transaction, onBack }) {
   useEffect(() => {
     if (wallets.length > 0 && !wallet) setWallet(wallets[0].name);
   }, [wallets, wallet]);
-
+  
   const handleAmountChange = (e) => {
     const numericValue = e.target.value.replace(/\D/g, '');
     if (!numericValue) {
@@ -71,7 +73,7 @@ export default function EditTransaction({ transaction, onBack }) {
 
   return (
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
-      <header className="bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-900 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-white rounded-full -mr-20 -mt-20 opacity-10"></div>
         <div className="relative z-10 flex items-center justify-between">
           <button type="button" onClick={onBack} className="w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors border border-white/30 cursor-pointer">
@@ -138,7 +140,6 @@ export default function EditTransaction({ transaction, onBack }) {
                     {/* Ikon panah bawah kecil */}
                     <span className="text-xs text-slate-400">▼</span>
                   </button>
-
                   {/* Daftar Pilihan yang Muncul Saat Diklik (Menu) */}
                   {isWalletOpen && (
                     <ul className="absolute z-10 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-lg max-h-48 overflow-y-auto">

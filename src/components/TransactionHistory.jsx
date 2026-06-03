@@ -129,7 +129,7 @@ export default function TransactionHistory({ onBack, onEdit }) {
       body: tableRows,
       startY: 46,
       theme: 'grid',
-      styles: { fontSize: 10, cellPadding: 3, overflow: 'linebreak', valign: 'middle' },
+      styles: { fontSize: 8, cellPadding: 4, overflow: 'linebreak', valign: 'middle' },
       headStyles: { fillColor: [30, 58, 138], textColor: 255, fontStyle: 'bold' },
       columnStyles: { 3: { halign: 'right' }, 1: { cellWidth: 35 }, 5: { cellWidth: 55 } },
       didParseCell: function(data) {
@@ -153,7 +153,7 @@ export default function TransactionHistory({ onBack, onEdit }) {
     <div className="w-full bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-32 relative max-w-md mx-auto shadow-xl overflow-hidden font-inter">
       
       {/* HEADER */}
-      <header className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white pt-1 pb-8 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-1 pb-8 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 rounded-full -mr-20 -mt-20 opacity-30"></div>
         
         <div className="relative z-10 flex items-center justify-between mb-6">
@@ -166,16 +166,16 @@ export default function TransactionHistory({ onBack, onEdit }) {
 
       
         {/* STATS CARD */}
-        <div className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-xl rounded-2xl p-4 border border-white/20 mb-2">
+        <div className="app-card backdrop-blur-xl rounded-2xl p-4 border border-white/20 mb-2">
           <p className=" text-l mb-20 font-base">Ringkasan Transaksi</p>
           <div className="grid grid-cols-2 mt-8 gap-2">
             <div>
-              <p className="text-blue-200 text-[10px] font-medium mb-1">Total Transaksi</p>
-              <p className="text-[12px] font-black text-white">{totalTransactions}</p>
+              <p className="app-text text-[12px] font-medium mb-1">Total Transaksi</p>
+              <p className="text-[16px] font-bold app-text">{totalTransactions}</p>
             </div>
             <div>
-              <p className="text-blue-200 text-[10px] font-medium mb-1">Total Perubahan</p>
-              <p className={`text-[12px] font-black ${totalAmount >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+              <p className="app-text text-[12px] font-medium mb-1">Total Perubahan</p>
+              <p className={`text-[14px] font-bold ${totalAmount >= 0 ? 'text-green-400' : 'text-rose-500'}`}>
                 {totalAmount >= 0 ? '+' : ''}{formatIDR(totalAmount)}
               </p>
             </div>
@@ -187,14 +187,14 @@ export default function TransactionHistory({ onBack, onEdit }) {
       <section className="px-6 mt-6">
         <label className="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider">Filter Tampilan</label>
         <div className="flex gap-2 bg-white rounded-xl p-2 shadow-sm border border-slate-200">
-          <button onClick={() => setFilterType('all')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'all' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Semua</button>
-          <button onClick={() => setFilterType('income')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'income' ? 'bg-emerald-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Masuk</button>
-          <button onClick={() => setFilterType('expense')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'expense' ? 'bg-rose-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Keluar</button>
+          <button onClick={() => setFilterType('all')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'all' ? 'app-btn text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Semua</button>
+          <button onClick={() => setFilterType('income')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'income' ? 'bg-emerald-400 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Masuk</button>
+          <button onClick={() => setFilterType('expense')} className={`flex-1 py-2 px-2 rounded-lg text-xs font-bold transition-all ${filterType === 'expense' ? 'bg-rose-400 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>Keluar</button>
         </div>
 
         <div className="flex gap-2 bg-white rounded-xl p-2 shadow-sm border border-slate-200 mt-2">
-          <button onClick={() => setTimeRange('week')} className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${timeRange === 'week' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>1 Minggu</button>
-          <button onClick={() => setTimeRange('month')} className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${timeRange === 'month' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>1 Bulan</button>
+          <button onClick={() => setTimeRange('week')} className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${timeRange === 'week' ? 'app-btn text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>1 Minggu</button>
+          <button onClick={() => setTimeRange('month')} className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${timeRange === 'month' ? 'app-btn text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}>1 Bulan</button>
         </div>
       </section>
 

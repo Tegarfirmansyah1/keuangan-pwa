@@ -79,7 +79,7 @@ export default function Backup({ onBack }) {
   return (
     <div className="bg-gradient-to-b from-slate-100 to-slate-500 min-h-screen text-slate-900 pb-20 relative max-w-md mx-auto shadow-xl overflow-hidden font-sans">
       {/* HEADER Teks */}
-      <header className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
+      <header className="app-header text-white pt-6 pb-14 px-6 rounded-b-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-40 h-40 bg-blue-500 rounded-full -mr-20 -mt-20 opacity-30"></div>
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-400 rounded-full -ml-16 -mb-16 opacity-20"></div>
         <div className="relative z-10 flex items-center justify-between">
