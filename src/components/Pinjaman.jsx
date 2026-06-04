@@ -213,16 +213,15 @@ const handleInputAngka = (e, setter) => {
           const progress = (loan.paidAmount / loan.totalAmount) * 100;
           
           return (
-            <div key={loan.id} className="bg-white w-90 mx-auto p-5 rounded-2xl shadow-sm border border-slate-200">
+            <div key={loan.id} className="bg-white w-auto mx-auto p-5 rounded-2xl shadow-sm border border-slate-200">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h3 className="font-bold text-lg text-slate-800">{loan.name}</h3>
-                  <p className="text-xs text-slate-500">Total: Rp {loan.totalAmount.toLocaleString('id-ID')}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={`text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${loan.status === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                  <h3 className="font-bold text-lg text-left text-slate-800">{loan.name}</h3>
+                  <span className={`text-[8px] font-bold px-2 py-1 rounded-md uppercase tracking-wider ${loan.status === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                     {loan.status}
                   </span>
+                </div>
+                <div className="flex items-center gap-2">
                   
                   {/* TOMBOL EDIT & HAPUS (Kecil di pojok) */}
                   <button onClick={() => openEdit(loan)} className="text-slate-400 hover:text-blue-500 p-1">

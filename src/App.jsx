@@ -145,7 +145,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
         <div className="relative z-10 flex justify-between items-start mb-8">
           <div>
             <p className="text-main text-[18px] pt-12 font-medium mb-1">Selamat datang kembali</p>
-            <p className="text-[32px] pt-2 pb-10 font-bold text-left">{userName || 'User'}</p>
+            <p className="text-[32px] pt-6 pb-6 font-bold text-left">{userName || 'User'}</p>
           </div>
           <button onClick={() => setIsModalOpen(true)} className="text-lg">
           ⚙️
